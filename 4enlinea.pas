@@ -4,9 +4,9 @@ uses crt;
 
 const 
 	FICHAP1DEFAULT = '@';
-	COLORP1DEFAULT = red;
+	COLORP1DEFAULT = 4;
 	FICHAP2DEFAULT = '#';
-	COLORP2DEFAULT = blue;
+	COLORP2DEFAULT = 1;
 	VACIO = ' ';
 
 	ANCHO = 7;
@@ -32,33 +32,36 @@ var
 	input, opc, fichaP1, fichaP2: char;
 	colorP1, colorP2: Shortint;
 
-procedure init;
+procedure reiniciar;
 begin
-	TextBackground(Black);
-	clrscr;
-
-	input:=VACIO;
-
 	x:=1;
-
-	gameOver := false;
-	exit:= false;	
 	turn:=true;
+	input:=VACIO;
+	gameOver:=false;
 
-	fichaP1:=FICHAP1DEFAULT;
-	fichaP2:=FICHAP2DEFAULT;
-	colorP1:=COLORP1DEFAULT;
-	colorP2:=COLORP2DEFAULT;
-	
 	{Llenar array del tablero}
-
 	for i := 1 to ANCHO do
 	begin
 		for j := 1 to ALTO do
 		begin
 			Tablero[i,j] := VACIO
-		end;
-	end;
+		end
+	end
+end;
+
+procedure init;
+begin
+	TextBackground(Black);
+	clrscr;
+
+	exit:= false;
+
+	fichaP1:=FICHAP1DEFAULT;
+	fichaP2:=FICHAP2DEFAULT;
+	colorP1:=COLORP1DEFAULT;
+	colorP2:=COLORP2DEFAULT;
+
+	reiniciar;
 end;
 
 function KeyScan:char;
@@ -183,10 +186,10 @@ begin
 	end;
 end;
 
-function enLinea: Boolean;
+{function enLinea: Boolean;
 begin
 
-end;
+end;}
 
 function colocarFicha:Boolean;
 begin
@@ -245,7 +248,6 @@ begin
 				end
 			end;			
 		end;
-		delay(150);
 	end; { FIN TURNO CPU }
 	if input = #27 then
 		gameOver:=true
@@ -254,7 +256,7 @@ end;
 procedure update;
 begin
 	if tableroLleno then
-		init
+		reiniciar
 	else
 		handleTurn
 end;
@@ -263,29 +265,34 @@ procedure jugar;
 begin
 	clrscr;
 	CursorOff;
+	reiniciar;
 	repeat
 		update();
 		draw();
 	until gameOver;
 end;
 
-{procedure seleccionarColor(color:char): Shortint;
+function seleccionarColor(color:char): Shortint;
 begin
 	case color of
-		'1': seleccionarColor := red;
-		'2': seleccionarColor := blue;
-		'3': seleccionarColor := pink;
-		'4': seleccionarColor := white;
-		'5': seleccionarColor := orange;
-		'6': seleccionarColor := gray;
-		'7': seleccionarColor := violet;
-		'8': seleccionarColor := yellow;
-		'9': seleccionarColor := green;
-		'0': seleccionarColor := maroon;
+		'1': seleccionarColor := 1;    {Blue}
+		'2': seleccionarColor := 2;    {Green}
+		'3': seleccionarColor := 3;    {Cyan}
+		'4': seleccionarColor := 4;    {Red}
+		'5': seleccionarColor := 5;    {Magenta}
+		'6': seleccionarColor := 6;    {Brown}
+		'7': seleccionarColor := 7;    {White}
+		'8': seleccionarColor := 8;    {Grey}
+		'9': seleccionarColor := 9;    {Light Blue}
+		'A': seleccionarColor := 10;    {Light Green}
+		'B': seleccionarColor := 11;    {Light Cyan}
+		'C': seleccionarColor := 12;    {Light Red}
+		'D': seleccionarColor := 13;    {Light Magenta}
+		'E': seleccionarColor := 14;    {Yellow}
 		else
 			seleccionarColor:=seleccionarColor('1');
 	end;
-end;}
+end;
 
 procedure cambiarColores;
 var color: char;
@@ -293,17 +300,58 @@ begin
 	clrscr;
 	writeln('------> Cambiar fichas <------');
 	writeln();
-	writeln('1) Rojo   2) Azul   3) Rosado   4) Blanco   5) Naranga  ');
-	writeln('6) Gris   7) Violeta   8) Amarillo   9) Verde   0) Marron  ');
+	textcolor(1);
+	write('1) Azul  '); 
+	textcolor(2);
+	write('2) Verede  '); 
+	textcolor(3);
+	write('3) Cyan  ');
+	textcolor(4);
+	write('4) Rojo  ');   
+	textcolor(5);
+	write('5) Magenta  '); 
+	writeln();
+
+	textcolor(6); 
+	write('6) Maron  ');
+	textcolor(7);
+	write('7) Blanco  ');
+	textcolor(8);
+	write('8) Gris  ');
+	textcolor(9);
+	write('9) Azul claro  ');
+	textcolor(10);
+	write('A) Verde claro  ');
+	writeln();
+
+	textcolor(11);
+	write('B) Cyan claro  ');   
+	textcolor(12);
+	write('C) Rojo claro  ');   
+	textcolor(13);
+	write('D) Magenta claro  ');   
+	textcolor(14);
+	write('E) Amarillo  ');
+	writeln();
+
+	textcolor(white);
+	writeln();
+	writeln('En caso de seleccionar una opción que no este en el menú se utilizara el 1');
 	writeln();
 
 	write('Seleccione color jugador 1: ');
 	readln(color);
-	{colorP1 := seleccionarColor(color);}
+	colorP1 := seleccionarColor(color);
 	
-	write('Seleccione color jugador 2: ');
-	readln(color);
-	{colorP2 := seleccionarColor(color);}
+	repeat
+		if colorP1 = colorP2 then
+			write('Seleccione un color distinto, este ya lo tiene el jugador 1: ')
+		else
+			write('Seleccione color jugador 2: ');
+
+		readln(color);
+		colorP2 := seleccionarColor(color)
+	until colorP1 <> colorP2;
 end;
 
 function seleccionarFicha(ficha:char): char;
@@ -332,15 +380,23 @@ begin
 	writeln();
 	writeln('1) @   2) #   3) $   4) %   5) &  ');
 	writeln('6) 0   7) X   8) *   9) /   0) O  ');
+
 	writeln();
+	writeln('En caso de seleccionar una opción que no este en el menú se utilizara el 1');
 
 	write('Seleccione ficha jugador 1: ');
 	readln(ficha);
 	fichaP1 := seleccionarFicha(ficha);
 	
-	write('Seleccione ficha jugador 2: ');
-	readln(ficha);
-	fichaP2 := seleccionarFicha(ficha);
+	repeat
+		if fichaP1 = fichaP2 then
+			write('Seleccione una ficha distinta, esta ya la tiene el jugador 1: ')
+		else
+			write('Seleccione ficha jugador 2: ');
+
+		readln(ficha);
+		fichaP2 := seleccionarFicha(ficha)
+	until fichaP1 <> fichaP2;
 end;
 
 procedure opciones;
