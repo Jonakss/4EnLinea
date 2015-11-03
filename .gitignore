@@ -1,5 +1,7 @@
 # Object files
 *.o
+*.dsk
+.$$$
 
 # Precompiled Headers
 
