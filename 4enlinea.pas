@@ -25,16 +25,29 @@ begin
 	begin
 		for j := 1 to ALTO do
 		begin
-			Tablero[i,j] := ESPACIO;	
+			Tablero[i,j] := FICHAP1;	
 		end;
+	end;
+end;
+
+procedure dibujarTablero;
+begin
+	for i := 1 to ANCHO do
+	begin
+		for j := 1 to ALTO do
+		begin
+			write(' ', Tablero[i,j], ' ');	
+		end;
+		writeln();
 	end;
 end;
 
 procedure draw;
 begin
 	clrscr;
-	write(FICHAP1, ESPACIO, FICHAP2);
+	dibujarTablero();
 end;
+
 procedure update;
 begin
 	
