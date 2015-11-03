@@ -35,10 +35,12 @@ var
 procedure init;
 begin
 	TextBackground(Black);
-	input:=VACIO;
 	clrscr;
+
+	input:=VACIO;
+
 	x:=1;
-	
+
 	gameOver := false;
 	exit:= false;	
 	turn:=true;
@@ -267,14 +269,46 @@ begin
 	until gameOver;
 end;
 
-procedure cambiarFichas;
+procedure cambiarColores;
 begin
 	
 end;
 
-procedure cambiarColores;
+function seleccionarFicha(ficha:char): char;
 begin
+	case ficha of
+		'1': seleccionarFicha:='@';
+		'2': seleccionarFicha:='#';
+		'3': seleccionarFicha:='$';
+		'4': seleccionarFicha:='%';
+		'5': seleccionarFicha:='&';
+		'6': seleccionarFicha:='0';
+		'7': seleccionarFicha:='X';
+		'8': seleccionarFicha:='*';
+		'9': seleccionarFicha:='/';
+		'0': seleccionarFicha:='O';
+		else
+			seleccionarFicha:='@';
+	end;
+end;
+
+procedure cambiarFichas;
+var ficha: char;
+begin
+	clrscr;
+	writeln('------> Cambiar fichas <------');
+	writeln();
+	writeln('1) @   2) #   3) $   4) %   5) &  ');
+	writeln('6) 0   7) X   8) *   9) /   0) O  ');
+	writeln();
+
+	write('Seleccione ficha jugador 1: ');
+	readln(ficha);
+	fichaP1 := seleccionarFicha(ficha);
 	
+	write('Seleccione ficha jugador 2: ');
+	readln(ficha);
+	fichaP2 := seleccionarFicha(ficha);
 end;
 
 procedure opciones;
@@ -287,12 +321,13 @@ begin
 		writeln();
 		writeln('1) Fichas');
 		writeln('2) Colores');
+		writeln();
 		writeln('0) Atras');
 		writeln();
 		write('Seleccione opcion: ');
 		readln(sel);
 		case sel of
-			'1': cambiarColores;
+			'1': cambiarFichas;
 			'2': cambiarColores;
 		end;
 	until sel = '0';
@@ -321,6 +356,7 @@ begin
 		writeln();
 		writeln('1) Jugar');
 		writeln('2) Opciones');
+		writeln();
 		writeln('0) Salir');
 		writeln();
 		write('Seleccione opcion: ');
