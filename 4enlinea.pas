@@ -12,10 +12,27 @@ type
 	TTable = array [1..ANCHO, 1..ALTO] of char;
 
 var 
-	gameOver:Boolean;
+	gameOver, exit:Boolean;
 	Tablero: TTable;
 	i, j, x: Integer;
-	var a: char;
+	a, opc: char;
+
+procedure init;
+begin
+	a:=ESPACIO;
+	clrscr;
+	x:=0;
+	gameOver := false;
+	exit:= false;	
+	{Llenar array del tablero}
+	for i := 1 to ANCHO do
+	begin
+		for j := 1 to ALTO do
+		begin
+			Tablero[i,j] := FICHAP1;	
+		end;
+	end;
+end;
 
 Procedure KeyScan;
 BEGIN
@@ -38,25 +55,10 @@ If KeyPressed then
       			x:=x+1	
 		end;
       end;
+      if a = #27 then gameOver:=true
+      else gameOver := false
     END
 END;
-
-procedure init;
-begin
-	a:=ESPACIO;
-	clrscr;
-	x:=0;
-	gameOver := false;	
-	{Llenar array del tablero}
-	for i := 1 to ANCHO do
-	begin
-		for j := 1 to ALTO do
-		begin
-			Tablero[i,j] := FICHAP1;	
-		end;
-	end;
-end;
-
 
 procedure dibujarTablero;
 begin
@@ -84,11 +86,44 @@ begin
 	KeyScan();
 end;
 
+procedure jugar;
 begin
-	init();
-	while not gameOver do
-	begin
+	repeat
 		update();
 		draw();
-	end;
+	until gameOver;
+end;
+
+procedure salir(var exit: Boolean);
+var 
+	o: char;
+begin
+	repeat
+		Writeln('Esta seguro que quiere salir (s: si, n: no)? ');
+		readln(o);
+	until (o = 's') or (o = 'n');
+	if o = 's' then
+		exit:= true
+	else if o = 'n' then
+		exit:= false
+end;
+
+begin
+	init();
+	repeat
+		clrscr;
+		writeln('...··· MENÚ ···...');
+		writeln();
+		writeln('1) Jugar');
+		writeln('0) Salir');
+		writeln();
+		write('Seleccione opción: ');
+		readln(opc);
+		case opc of
+			'1': jugar();
+			'0': salir(exit);
+			else 
+				Write(' Opción inválida.');
+		end;
+	until exit;
 end.
