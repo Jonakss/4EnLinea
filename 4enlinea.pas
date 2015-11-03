@@ -99,6 +99,23 @@ begin
 	dibujarTablero;
 end;
 
+function tableroLleno: Boolean;
+begin
+	tableroLleno:=true;
+	for i := 1 to ANCHO do
+	begin
+		for j := 1 to ALTO do
+		begin
+			if Tablero[i][j] = VACIO then
+			begin
+				tableroLleno:=false;
+				i:=ANCHO;
+				j:=ALTO
+			end;
+		end;
+	end;
+end;
+
 function colocarFicha(x: Integer):Boolean;
 begin
 	for i := ALTO downto 1 do
@@ -143,8 +160,19 @@ begin
 	end
 	else
 	begin
-		if input = #80 (*DOWN*) then
-			turn := true
+		for i := 1 to ANCHO do
+		begin
+			for j := ALTO downto 1 do
+			begin
+				if Tablero[i][j] = VACIO then
+				begin
+					Tablero[i][j] := FICHAP2;
+					i:=ANCHO;
+					j:=1;
+					turn:=true
+				end
+			end;			
+		end;
 	end;
 	if input = #27 then
 		gameOver:=true
@@ -152,7 +180,10 @@ end;
 
 procedure update;
 begin
-	handleTurn;
+	if tableroLleno then
+		init
+	else
+		handleTurn
 end;
 
 procedure jugar;
