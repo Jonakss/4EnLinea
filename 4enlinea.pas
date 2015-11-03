@@ -269,26 +269,58 @@ begin
 	until gameOver;
 end;
 
-procedure cambiarColores;
+{procedure seleccionarColor(color:char): Shortint;
 begin
+	case color of
+		'1': seleccionarColor := red;
+		'2': seleccionarColor := blue;
+		'3': seleccionarColor := pink;
+		'4': seleccionarColor := white;
+		'5': seleccionarColor := orange;
+		'6': seleccionarColor := gray;
+		'7': seleccionarColor := violet;
+		'8': seleccionarColor := yellow;
+		'9': seleccionarColor := green;
+		'0': seleccionarColor := maroon;
+		else
+			seleccionarColor:=seleccionarColor('1');
+	end;
+end;}
+
+procedure cambiarColores;
+var color: char;
+begin
+	clrscr;
+	writeln('------> Cambiar fichas <------');
+	writeln();
+	writeln('1) Rojo   2) Azul   3) Rosado   4) Blanco   5) Naranga  ');
+	writeln('6) Gris   7) Violeta   8) Amarillo   9) Verde   0) Marron  ');
+	writeln();
+
+	write('Seleccione color jugador 1: ');
+	readln(color);
+	{colorP1 := seleccionarColor(color);}
 	
+	write('Seleccione color jugador 2: ');
+	readln(color);
+	{colorP2 := seleccionarColor(color);}
 end;
 
 function seleccionarFicha(ficha:char): char;
 begin
 	case ficha of
-		'1': seleccionarFicha:='@';
-		'2': seleccionarFicha:='#';
-		'3': seleccionarFicha:='$';
-		'4': seleccionarFicha:='%';
-		'5': seleccionarFicha:='&';
-		'6': seleccionarFicha:='0';
-		'7': seleccionarFicha:='X';
-		'8': seleccionarFicha:='*';
-		'9': seleccionarFicha:='/';
-		'0': seleccionarFicha:='O';
+		'1': seleccionarFicha := '@';
+		'2': seleccionarFicha := '#';
+		'3': seleccionarFicha := '$';
+		'4': seleccionarFicha := '%';
+		'5': seleccionarFicha := '&';
+		'6': seleccionarFicha := '0';
+		'7': seleccionarFicha := 'X';
+		'8': seleccionarFicha := '*';
+		'9': seleccionarFicha := '/';
+		'0': seleccionarFicha := 'O';
 		else
-			seleccionarFicha:='@';
+			seleccionarFicha := seleccionarFicha('1');
 	end;
 end;
 
