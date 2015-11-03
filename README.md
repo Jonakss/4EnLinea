@@ -5,15 +5,17 @@
 
 ## TODO ##
 
-* [x] - Menu 
-* [x] - Dibujar tablero
-* [x] - Colocar fichas 
-* [-] - CPU coloca fichas
-* [ ] - Inteligencia CPU
-* [ ] - Opciones
-* [ ] - Dificultad
-* [ ] - 
-* [ ] - Guardar partida
+* [x] Menu 
+* [x] Dibujar tablero
+* [x] Colocar fichas 
+* [ ] CPU coloca fichas
+* [ ] Opciones
+* [ ] Inteligencia CPU
+* [ ] Dificultad
+** *facil *medio *dificil
+* [ ] Puntaje (partidas ganadas o perdidas)
+* [ ] Guardar partida
+* [ ]
 
 
 
