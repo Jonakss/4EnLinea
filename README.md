@@ -8,13 +8,14 @@
 * [x] Menu 
 * [x] Dibujar tablero
 * [x] Colocar fichas 
+* [ ] Revisar si se hizo 4 en linea
 * [ ] CPU coloca fichas
 * [ ] Opciones
 * [ ] Inteligencia CPU
 * [ ] Dificultad
 * [ ] Puntaje (partidas ganadas o perdidas)
 * [ ] Guardar partida
-* [ ]
+* [ ] Multijugador
 
 
 

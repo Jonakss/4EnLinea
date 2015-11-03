@@ -8,8 +8,18 @@ const
 	FICHAP2 = '#';
 	COLORP2 = blue;
 	VACIO = ' ';
+
 	ANCHO = 7;
 	ALTO = 6;
+
+	PADDINGTABLEROX = 20;
+	PADDINGTABLEROY = 0;
+
+	ANCHOCELDA = 4;
+	ALTOCELDA = 2;
+
+	ORIGENX = 5;
+	ORIGENY = 5;
 
 type 
 	TTable = array [1..ANCHO, 1..ALTO] of char;
@@ -47,27 +57,40 @@ If KeyPressed then
 	KeyScan:=ReadKey
 END;
 
-procedure dibujarTurno;
+procedure dibujarInfo;
 begin
-	GotoXY(5, 1);
-	ClrEol;
+	GotoXY(ORIGENX, ORIGENY);
 	if turn then
-		write('Es tu turno')
+		write('Es tu turno        ')
 	else
 		write('Es el turno del CPU');
+
+	GotoXY(ORIGENX, ORIGENY + 5);
+	write('Tu: ');
+	GotoXY(ORIGENX + 10, ORIGENY + 5);
+	textcolor(COLORP1);
+	write(FICHAP1);
+	textcolor(white);
+
+	GotoXY(ORIGENX, ORIGENY + 10);
+	write('CPU: ');
+	GotoXY(ORIGENX + 10, ORIGENY + 10);
+	textcolor(COLORP2);
+	write(FICHAP2);
+	textcolor(white);
 end;
 
 procedure dibujarFichaJugador;
 begin
 	for i := 1 to ANCHO do
 		begin
-			GotoXY(5 * i,3);
-			write(VACIO);
+			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+			write(' ', VACIO);
 		end;
 	if turn then
 	begin
-		GotoXY(5 * x,3);
-		write(FICHAP1);
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * x, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+		write(' ', FICHAP1);
 	end;
 end;
 
@@ -75,26 +98,54 @@ procedure dibujarTablero;
 begin
 	for i := 1 to ANCHO do
 	begin
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY - ALTOCELDA);
+		write('+');
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY - ALTOCELDA);
+		write('---+');
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i - ANCHOCELDA div 4, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+		write('|');
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY);
+		write('+');
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY);
+		write('---+');
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * (ANCHO + 1) - ANCHOCELDA div 4, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+		write('|');
+
+
+		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY + ALTOCELDA div 2);
+		write('---+');
+
 		for j := 1 to ALTO do
 		begin
-			GotoXY(5 * i, 5 * j);
+			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY + ALTOCELDA * i - ALTOCELDA div 2);
+			write('+');
+			
+			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY + ALTOCELDA * j);
+			write('|');
+			
 			case Tablero[i, j] of
 				FICHAP1: textcolor(COLORP1);
 				FICHAP2: textcolor(COLORP2);
 				else textcolor(white);
 			end;
-			write(' ', Tablero[i,j], ' ');	
+
+			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY + ALTOCELDA * j);
+			write(' ', Tablero[i,j], ' ');
+
+			textcolor(white);
+			write('|');
+
+			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, 1 + PADDINGTABLEROY + ORIGENY + ALTOCELDA * j);
+			writeln('---+');
 		end;
-		writeln();
 	end;
-	textcolor(white);
-	writeln(); writeln(x);
+	writeln();
 end;
 
 procedure draw;
 begin
 	{clrscr;}
-	dibujarTurno;
+	dibujarInfo;
 	dibujarFichaJugador;
 	dibujarTablero;
 end;
@@ -116,7 +167,12 @@ begin
 	end;
 end;
 
-function colocarFicha(x: Integer):Boolean;
+function enLinea: Boolean;
+begin
+
+end;
+
+function colocarFicha:Boolean;
 begin
 	for i := ALTO downto 1 do
 	begin
@@ -153,7 +209,7 @@ begin
     		end;
     		#80:	(*DOWN*) 
     		begin
-    			if colocarFicha(x) then
+    			if colocarFicha then
     				turn := false
     		end;
 		end;
@@ -173,6 +229,7 @@ begin
 				end
 			end;			
 		end;
+		delay(150);
 	end; { FIN TURNO CPU }
 	if input = #27 then
 		gameOver:=true
