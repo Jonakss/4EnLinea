@@ -3,10 +3,10 @@ program ProgramName;
 uses crt;
 
 const 
-	FICHAP1 = '@';
-	COLORP1 = red;
-	FICHAP2 = '#';
-	COLORP2 = blue;
+	FICHAP1DEFAULT = '@';
+	COLORP1DEFAULT = red;
+	FICHAP2DEFAULT = '#';
+	COLORP2DEFAULT = blue;
 	VACIO = ' ';
 
 	ANCHO = 7;
@@ -29,7 +29,8 @@ var
 	Tablero: TTable;
 	i, j: Integer;
 	x: 0..ANCHO;
-	input, opc: char;
+	input, opc, fichaP1, fichaP2: char;
+	colorP1, colorP2: Shortint;
 
 procedure init;
 begin
@@ -37,9 +38,16 @@ begin
 	input:=VACIO;
 	clrscr;
 	x:=1;
+	
 	gameOver := false;
 	exit:= false;	
 	turn:=true;
+
+	fichaP1:=FICHAP1DEFAULT;
+	fichaP2:=FICHAP2DEFAULT;
+	colorP1:=COLORP1DEFAULT;
+	colorP2:=COLORP2DEFAULT;
+	
 	{Llenar array del tablero}
 
 	for i := 1 to ANCHO do
@@ -65,18 +73,18 @@ begin
 	else
 		write('Es el turno del CPU');
 
-	GotoXY(ORIGENX, ORIGENY + 5);
+	GotoXY(ORIGENX, ORIGENY + 3);
 	write('Tu: ');
-	GotoXY(ORIGENX + 10, ORIGENY + 5);
-	textcolor(COLORP1);
-	write(FICHAP1);
+	GotoXY(ORIGENX + 10, ORIGENY + 3);
+	textcolor(colorP1);
+	write(fichaP1);
 	textcolor(white);
 
-	GotoXY(ORIGENX, ORIGENY + 10);
+	GotoXY(ORIGENX, ORIGENY + 5);
 	write('CPU: ');
-	GotoXY(ORIGENX + 10, ORIGENY + 10);
-	textcolor(COLORP2);
-	write(FICHAP2);
+	GotoXY(ORIGENX + 10, ORIGENY + 5);
+	textcolor(colorP2);
+	write(fichaP2);
 	textcolor(white);
 end;
 
@@ -90,7 +98,7 @@ begin
 	if turn then
 	begin
 		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * x, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
-		write(' ', FICHAP1);
+		write(' ', fichaP1);
 	end;
 end;
 
@@ -123,11 +131,17 @@ begin
 			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY + ALTOCELDA * j);
 			write('|');
 			
-			case Tablero[i, j] of
-				FICHAP1: textcolor(COLORP1);
-				FICHAP2: textcolor(COLORP2);
-				else textcolor(white);
-			end;
+
+			if Tablero[i, j] = fichaP1 then
+				textcolor(colorP1)
+			else if Tablero[i, j] = fichaP2 then
+				textcolor(colorP2);
+			
+			{case Tablero[i, j] of
+							fichaP1: textcolor(colorP1);
+							fichaP2: textcolor(colorP2);
+							else textcolor(white);
+						end;}
 
 			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY + ALTOCELDA * j);
 			write(' ', Tablero[i,j], ' ');
@@ -178,7 +192,7 @@ begin
 	begin
 		if Tablero[x][i] = VACIO then
 		begin
-			Tablero[x][i]:=FICHAP1;
+			Tablero[x][i]:=fichaP1;
 			i:=1;
 			colocarFicha:=true
 		end
@@ -222,7 +236,7 @@ begin
 			begin
 				if Tablero[i][j] = VACIO then
 				begin
-					Tablero[i][j] := FICHAP2;
+					Tablero[i][j] := fichaP2;
 					i:=ANCHO;
 					j:=1;
 					turn:=true
@@ -253,12 +267,43 @@ begin
 	until gameOver;
 end;
 
+procedure cambiarFichas;
+begin
+	
+end;
+
+procedure cambiarColores;
+begin
+	
+end;
+
+procedure opciones;
+var 
+	sel: char;
+begin
+	clrscr;
+	repeat
+		writeln('------> Opciones <------');
+		writeln();
+		writeln('1) Fichas');
+		writeln('2) Colores');
+		writeln('0) Atras');
+		writeln();
+		write('Seleccione opcion: ');
+		readln(sel);
+		case sel of
+			'1': cambiarColores;
+			'2': cambiarColores;
+		end;
+	until sel = '0';
+end;
+
 procedure salir(var exit: Boolean);
 var 
 	o: char;
 begin
 	repeat
-		Writeln('Esta seguro que quiere salir (s: si, n: no)? ');
+		writeln('Esta seguro que quiere salir (s: si, n: no)? ');
 		readln(o);
 	until (o = 's') or (o = 'n');
 	if o = 's' then
@@ -275,18 +320,20 @@ begin
 		writeln('------> MENU <------');
 		writeln();
 		writeln('1) Jugar');
+		writeln('2) Opciones');
 		writeln('0) Salir');
 		writeln();
 		write('Seleccione opcion: ');
 		readln(opc);
 		case opc of
 			'1': jugar();
+			'2': opciones();
 			'0': salir(exit);
 			else 
 			begin
 				textcolor(red);
 				writeln();
-				Write(' Opción inválida.');
+				write(' Opción inválida.');
 				delay(150);
 				textcolor(white);
 			end;
