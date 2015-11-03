@@ -134,7 +134,7 @@ end;
 procedure handleTurn;
 begin
 	input:=KeyScan;
-	if turn then {Turno jugador}
+	if turn then  { TURNO JUGADOR }
 	begin
 		case input of
 			#75:	(*LEFT*)
@@ -157,8 +157,8 @@ begin
     				turn := false
     		end;
 		end;
-	end
-	else
+	end  { FIN TURNO JUGADOR }
+	else { TURNO CPU }
 	begin
 		for i := 1 to ANCHO do
 		begin
@@ -173,7 +173,7 @@ begin
 				end
 			end;			
 		end;
-	end;
+	end; { FIN TURNO CPU }
 	if input = #27 then
 		gameOver:=true
 end;
