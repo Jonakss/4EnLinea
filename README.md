@@ -12,7 +12,6 @@
 * [ ] Opciones
 * [ ] Inteligencia CPU
 * [ ] Dificultad
-** *facil *medio *dificil
 * [ ] Puntaje (partidas ganadas o perdidas)
 * [ ] Guardar partida
 * [ ]
