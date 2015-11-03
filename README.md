@@ -10,7 +10,9 @@
 * [x] Colocar fichas 
 * [ ] Revisar si se hizo 4 en linea
 * [ ] CPU coloca fichas
-* [ ] Opciones
+* [x] Opciones
+* [x] Cambiar fichas
+* [ ] Cambiar colores
 * [ ] Inteligencia CPU
 * [ ] Dificultad
 * [ ] Puntaje (partidas ganadas o perdidas)
