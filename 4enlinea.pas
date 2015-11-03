@@ -36,7 +36,7 @@ begin
 	begin
 		for j := 1 to ALTO do
 		begin
-			Tablero[i,j] := FICHAP1
+			Tablero[i,j] := VACIO
 		end;
 	end;
 end;
@@ -99,6 +99,21 @@ begin
 	dibujarTablero;
 end;
 
+function colocarFicha(x: Integer):Boolean;
+begin
+	for i := ALTO downto 1 do
+	begin
+		if Tablero[x][i] = VACIO then
+		begin
+			Tablero[x][i]:=FICHAP1;
+			i:=1;
+			colocarFicha:=true
+		end
+		else
+			colocarFicha:=false
+	end;
+end;
+
 procedure handleTurn;
 begin
 	input:=KeyScan;
@@ -121,7 +136,8 @@ begin
     		end;
     		#80:	(*DOWN*) 
     		begin
-    			turn := false;
+    			if colocarFicha(x) then
+    				turn := false
     		end;
 		end;
 	end
@@ -188,4 +204,5 @@ begin
 			end;
 		end;
 	until exit;
+	clrscr;
 end.
