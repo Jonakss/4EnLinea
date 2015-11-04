@@ -9,10 +9,12 @@
 * [x] Dibujar tablero
 * [x] Colocar fichas 
 * [ ] Revisar si se hizo 4 en linea
-* [ ] CPU coloca fichas
+* [x] CPU coloca fichas
 * [x] Opciones
-* [x] Cambiar fichas
-* [ ] Cambiar colores
+* [x] Cambiar fichas	
+* [x] Cancelar cambiar fichas	
+* [x] Cambiar colores
+* [x] Cancelar cambiar colores
 * [ ] Inteligencia CPU
 * [ ] Dificultad
 * [ ] Puntaje (partidas ganadas o perdidas)
