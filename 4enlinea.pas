@@ -294,9 +294,19 @@ begin
 	end;
 end;
 
+procedure cancelarCambiarColor;
+begin
+	colorP1:=COLORP1DEFAULT;
+	colorP2:=COLORP2DEFAULT;
+end;
+
 procedure cambiarColores;
 var color: char;
+	cancelar: Boolean;
 begin
+	cancelar := false;
+	colorP1:=0;
+	colorP2:=0;
 	clrscr;
 	writeln('------> Cambiar fichas <------');
 	writeln();
@@ -338,20 +348,36 @@ begin
 	writeln();
 	writeln('En caso de seleccionar una opción que no este en el menú se utilizara el 1');
 	writeln();
+	writeln('0) Cancelar');
 
 	write('Seleccione color jugador 1: ');
 	readln(color);
-	colorP1 := seleccionarColor(color);
-	
-	repeat
+	if color = '0' then
+	begin
+		cancelar := true;
+		CancelarCambiarColor;
+	end
+	else
+		colorP1 := seleccionarColor(color);
+
+	if not cancelar then
+	begin
+		repeat
 		if colorP1 = colorP2 then
 			write('Seleccione un color distinto, este ya lo tiene el jugador 1: ')
 		else
 			write('Seleccione color jugador 2: ');
 
 		readln(color);
-		colorP2 := seleccionarColor(color)
+			if color = '0' then
+			begin
+				cancelar := true;
+				CancelarCambiarColor;
+			end
+			else
+				colorP2 := seleccionarColor(color)
 	until colorP1 <> colorP2;
+	end;
 end;
 
 function seleccionarFicha(ficha:char): char;
@@ -366,37 +392,66 @@ begin
 		'7': seleccionarFicha := 'X';
 		'8': seleccionarFicha := '*';
 		'9': seleccionarFicha := '/';
-		'0': seleccionarFicha := 'O';
+		'A': seleccionarFicha := 'O';
 		else
 			seleccionarFicha := seleccionarFicha('1');
 	end;
 end;
 
+procedure cancelarCambiarFicha;
+begin
+	fichaP1 := FICHAP1DEFAULT;
+	fichaP2 := FICHAP2DEFAULT;
+end;
+
 procedure cambiarFichas;
 var ficha: char;
+	cancelar: Boolean;
 begin
+	cancelar := false;
+	fichaP1 := VACIO;
+	fichaP2 := VACIO;
 	clrscr;
 	writeln('------> Cambiar fichas <------');
 	writeln();
 	writeln('1) @   2) #   3) $   4) %   5) &  ');
-	writeln('6) 0   7) X   8) *   9) /   0) O  ');
+	writeln('6) 0   7) X   8) *   9) /   A) O  ');
 
 	writeln();
 	writeln('En caso de seleccionar una opción que no este en el menú se utilizara el 1');
+	writeln();
+	writeln('0) Cancelar (Fichas por defecto)');
+	writeln();
 
 	write('Seleccione ficha jugador 1: ');
 	readln(ficha);
-	fichaP1 := seleccionarFicha(ficha);
-	
-	repeat
-		if fichaP1 = fichaP2 then
-			write('Seleccione una ficha distinta, esta ya la tiene el jugador 1: ')
-		else
-			write('Seleccione ficha jugador 2: ');
+	if ficha = '0' then
+	begin
+		cancelar := true;
+		cancelarCambiarFicha;
+	end
+	else
+		fichaP1 := seleccionarFicha(ficha);
 
-		readln(ficha);
-		fichaP2 := seleccionarFicha(ficha)
-	until fichaP1 <> fichaP2;
+	if not cancelar then
+	begin
+		repeat
+			if (fichaP1 = fichaP2) and not (fichaP1 = VACIO) then
+				write('Seleccione una ficha distinta, esta ya la tiene el jugador 1: ')
+			else
+				write('Seleccione ficha jugador 2: ');
+
+			readln(ficha);
+
+			if ficha = '0' then
+			begin
+				cancelar := true;
+				cancelarCambiarFicha;
+			end
+			else
+				fichaP2 := seleccionarFicha(ficha)
+		until fichaP1 <> fichaP2;
+	end;
 end;
 
 procedure opciones;
