@@ -271,12 +271,16 @@ begin
 		begin
 			for i := 1 to ANCHO do
 			begin
-				if colocarFicha(i, fichaP2) then
+				for j := 1 to ALTO do
 				begin
-					turn:=true;
-					i:=ANCHO;
-					j:=1;
-				end
+					if Tablero[i][j] = VACIO then
+						if colocarFicha(i, fichaP2) then
+						begin
+							turn:=true;
+							i:=ANCHO;
+							j:=ALTO;
+						end
+				end;
 			end
 		end;
 	end; { FIN TURNO JUGADOR2 }
