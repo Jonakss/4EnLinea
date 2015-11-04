@@ -19,7 +19,7 @@
 * [ ] Dificultad
 * [ ] Puntaje (partidas ganadas o perdidas)
 * [ ] Guardar partida
-* [ ] Multijugador
+* [x] Multijugador
 
 
 

@@ -25,18 +25,17 @@ type
 	TTable = array [1..ANCHO, 1..ALTO] of char;
 
 var 
-	gameOver, exit, turn:Boolean;
+	gameOver, exit, turn, multijugador:Boolean;
 	Tablero: TTable;
 	i, j: Integer;
 	x: 0..ANCHO;
-	input, opc, fichaP1, fichaP2: char;
+	opc, fichaP1, fichaP2: char;
 	colorP1, colorP2: Shortint;
 
 procedure reiniciar;
 begin
 	x:=1;
 	turn:=true;
-	input:=VACIO;
 	gameOver:=false;
 
 	{Llenar array del tablero}
@@ -55,6 +54,7 @@ begin
 	clrscr;
 
 	exit:= false;
+	multijugador:= false;
 
 	fichaP1:=FICHAP1DEFAULT;
 	fichaP2:=FICHAP2DEFAULT;
@@ -73,24 +73,42 @@ END;
 procedure dibujarInfo;
 begin
 	GotoXY(ORIGENX, ORIGENY);
-	if turn then
-		write('Es tu turno        ')
-	else
-		write('Es el turno del CPU');
 
-	GotoXY(ORIGENX, ORIGENY + 3);
-	write('Tu: ');
-	GotoXY(ORIGENX + 10, ORIGENY + 3);
+
+	if multijugador then
+	begin
+		if turn then
+			write('Es turno de jugador 1')
+		else
+			write('Es turno de jugador 2');
+
+		GotoXY(ORIGENX, ORIGENY + 3);
+		write('Jugador 1: ');
+
+		GotoXY(ORIGENX, ORIGENY + 5);
+		write('Jugador 2: ');
+	end
+	else
+	begin
+		if turn then
+			write('Es tu turno        ')
+		else
+			write('Es el turno del CPU');
+
+		GotoXY(ORIGENX, ORIGENY + 3);
+		write('Tu: ');
+
+		GotoXY(ORIGENX, ORIGENY + 5);
+		write('CPU: ');
+	end;
+	
+	GotoXY(ORIGENX + 12, ORIGENY + 3);
 	textcolor(colorP1);
 	write(fichaP1);
-	textcolor(white);
 
-	GotoXY(ORIGENX, ORIGENY + 5);
-	write('CPU: ');
-	GotoXY(ORIGENX + 10, ORIGENY + 5);
+	GotoXY(ORIGENX + 12, ORIGENY + 5);
 	textcolor(colorP2);
 	write(fichaP2);
-	textcolor(white);
 end;
 
 procedure dibujarFichaJugador;
@@ -100,31 +118,33 @@ begin
 			GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
 			write(' ', VACIO);
 		end;
+	GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * x, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
 	if turn then
 	begin
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * x, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+		textcolor(colorP1);
 		write(' ', fichaP1);
+	end
+	else if multijugador then
+	begin
+		textcolor(colorP2);
+		write(' ', fichaP2);	
 	end;
 end;
 
 procedure dibujarTablero;
 begin
+	textcolor(white);
+	GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY - ALTOCELDA);
+	write('+---+---+---+---+---+---+---+');
+	GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - ANCHOCELDA div 4, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
+	write('|   |   |   |   |   |   |   |');
+	GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY);
+	write('+---+---+---+---+---+---+---+');
+	dibujarFichaJugador;
+	
+	textcolor(white);
 	for i := 1 to ANCHO do
 	begin
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY - ALTOCELDA);
-		write('+');
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY - ALTOCELDA);
-		write('---+');
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i - ANCHOCELDA div 4, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
-		write('|');
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA - 1, PADDINGTABLEROY + ORIGENY);
-		write('+');
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY);
-		write('---+');
-		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * (ANCHO + 1) - ANCHOCELDA div 4, PADDINGTABLEROY + ORIGENY - ALTOCELDA div 2);
-		write('|');
-
-
 		GotoXY(PADDINGTABLEROX + ORIGENX + ANCHOCELDA * i, PADDINGTABLEROY + ORIGENY + ALTOCELDA div 2);
 		write('---+');
 
@@ -165,7 +185,6 @@ procedure draw;
 begin
 	{clrscr;}
 	dibujarInfo;
-	dibujarFichaJugador;
 	dibujarTablero;
 end;
 
@@ -191,13 +210,13 @@ begin
 
 end;}
 
-function colocarFicha:Boolean;
+function colocarFicha(col: integer; ficha: char):Boolean;
 begin
 	for i := ALTO downto 1 do
 	begin
-		if Tablero[x][i] = VACIO then
+		if Tablero[col][i] = VACIO then
 		begin
-			Tablero[x][i]:=fichaP1;
+			Tablero[col][i]:=ficha;
 			i:=1;
 			colocarFicha:=true
 		end
@@ -206,49 +225,61 @@ begin
 	end;
 end;
 
+procedure turnoJugador(ficha, input: char; color: Shortint);
+begin
+	case input of
+	#75:	(*LEFT*)
+		begin
+			if x = 1 then
+				x:=1
+			else
+				x:=x-1
+		end;
+	#77:	(*RIGTH*)
+	begin
+	  	if x = ANCHO then
+				x:=ANCHO
+			else
+				x:=x+1	
+	end;
+	#80:	(*DOWN*) 
+	begin
+		if colocarFicha(x, ficha) then
+		begin
+			turn := not turn;
+			x := 1
+		end
+	end;
+	end;
+end;
+
 procedure handleTurn;
+var input: char;
 begin
 	input:=KeyScan;
-	if turn then  { TURNO JUGADOR }
+	if turn then  { TURNO JUGADOR 1}
 	begin
-		case input of
-			#75:	(*LEFT*)
-          	begin
-          		if x = 1 then
-          			x:=1
-          		else
-          			x:=x-1
-          	end;
-        	#77:	(*RIGTH*)
-    		begin
-    	      	if x = ANCHO then
-          			x:=ANCHO
-          		else
-          			x:=x+1	
-    		end;
-    		#80:	(*DOWN*) 
-    		begin
-    			if colocarFicha then
-    				turn := false
-    		end;
-		end;
-	end  { FIN TURNO JUGADOR }
-	else { TURNO CPU }
+		turnoJugador(fichaP1, input, colorP1);
+	end  { FIN TURNO JUGADOR 1}
+	else { TURNO JUGADOR 2 }
 	begin
-		for i := 1 to ANCHO do
+		if multijugador then
 		begin
-			for j := ALTO downto 1 do
+			turnoJugador(fichaP2, input, colorP2);
+		end
+		else { TURNO CPU }
+		begin
+			for i := 1 to ANCHO do
 			begin
-				if Tablero[i][j] = VACIO then
+				if colocarFicha(i, fichaP2) then
 				begin
-					Tablero[i][j] := fichaP2;
+					turn:=true;
 					i:=ANCHO;
 					j:=1;
-					turn:=true
 				end
-			end;			
+			end
 		end;
-	end; { FIN TURNO CPU }
+	end; { FIN TURNO JUGADOR2 }
 	if input = #27 then
 		gameOver:=true
 end;
@@ -497,16 +528,26 @@ begin
 		CursorOn;
 		writeln('------> MENU <------');
 		writeln();
-		writeln('1) Jugar');
-		writeln('2) Opciones');
+		writeln('1) Jugar contra CPU');
+		writeln('2) Jugar multijugador');
+		writeln('3) Opciones');
 		writeln();
 		writeln('0) Salir');
 		writeln();
 		write('Seleccione opcion: ');
 		readln(opc);
 		case opc of
-			'1': jugar();
-			'2': opciones();
+			'1':
+			begin
+				multijugador := false;
+				jugar;
+			end;
+			'2':
+			begin
+				multijugador := true;
+				jugar;
+			end;
+			'3': opciones();
 			'0': salir(exit);
 			else 
 			begin
