@@ -343,7 +343,7 @@ begin
 	colorP1:=0;
 	colorP2:=0;
 	clrscr;
-	writeln('------> Cambiar fichas <------');
+	writeln('------> Cambiar colores <------');
 	writeln();
 	textcolor(1);
 	write('1) Azul  '); 
@@ -493,8 +493,8 @@ procedure opciones;
 var 
 	sel: char;
 begin
-	clrscr;
 	repeat
+		clrscr;
 		writeln('------> Opciones <------');
 		writeln();
 		writeln('1) Fichas');
